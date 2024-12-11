@@ -70,6 +70,7 @@ const config: Config = {
             "light",
             "dark",
             "retro",
+            "synthwave",
         ],
     },
 };

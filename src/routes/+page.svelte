@@ -63,7 +63,6 @@
     let models = [
         'gpt-4o',
         'gpt-4o-mini',
-        'o1-mini',
     ]
 
     let modelInput: HTMLSelectElement
@@ -93,9 +92,9 @@
 </script>
 
 <div class="container w-auto h-auto min-w-96">
-    <div class="p-4">
+    <div class="p-4 pb-8">
 
-        <h1 class="text-3xl font-bold">Am I a good fit?</h1>
+        <h1 class="text-3xl font-bold">Am I a Good Fit?</h1>
 
         <div class="label mt-2">
             <span class="label-text">Upload Resume</span>
