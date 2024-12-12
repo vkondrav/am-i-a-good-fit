@@ -1,5 +1,5 @@
 const observer = new MutationObserver(() => {
-    addAnalysisButton('.jobs-description__container', '#job-details');
+    addAnalysisButton('#jobDescriptionTitle', '#jobDescriptionText');
 });
 
 observer.observe(document.body, {childList: true, subtree: true});

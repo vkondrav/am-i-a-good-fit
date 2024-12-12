@@ -16,8 +16,36 @@
         "*://*.linkedin.com/jobs/*"
       ],
       "js": [
-        "shared.js",
+        "data.js",
+        "button.js",
+        "modal.js",
+        "ai.js",
         "content-linkedin.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://*.indeed.com/*"
+      ],
+      "js": [
+        "data.js",
+        "button.js",
+        "modal.js",
+        "ai.js",
+        "content-indeed.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://*.monster.com/*",
+        "*://*.monster.ca/*"
+      ],
+      "js": [
+        "data.js",
+        "button.js",
+        "modal.js",
+        "ai.js",
+        "content-monster.js"
       ]
     }
   ],
