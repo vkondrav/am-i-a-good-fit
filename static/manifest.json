@@ -16,7 +16,8 @@
         "*://*.linkedin.com/jobs/*"
       ],
       "js": [
-        "content.js"
+        "shared.js",
+        "content-linkedin.js"
       ]
     }
   ],
