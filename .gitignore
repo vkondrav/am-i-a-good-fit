@@ -25,3 +25,6 @@ vite.config.ts.timestamp-*
 
 # Extensions
 *.pem
+
+# Node
+package-lock.json
