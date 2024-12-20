@@ -85,13 +85,6 @@ function addAnalysisButton(jobDescriptionContainerSelector, jobDescriptionDetail
                 return;
             }
 
-            const apikey = await getApiKey();
-
-            if (!apikey) {
-                modalAnalysis.innerHTML = 'Please enter an Open AI API key';
-                return;
-            }
-
             const model = await getModel();
 
             if (!model) {
@@ -99,11 +92,33 @@ function addAnalysisButton(jobDescriptionContainerSelector, jobDescriptionDetail
                 return;
             }
 
+            let apikey;
+            let errorMessage;
+            let compareFunction;
+
+            if (model.startsWith('gpt-')) {
+
+                apikey = await getApiKeyOpenAI();
+                compareFunction = compareContentOpenAI;
+                errorMessage = 'Please enter an Open AI API key';
+
+            } else if (model.startsWith('gemini-')) {
+
+                apikey = await getApiKeyGoogle();
+                compareFunction = compareContentGoogle;
+                errorMessage = 'Please enter a Google API key';
+            }
+
+            if (!apikey) {
+                modalAnalysis.innerHTML = errorMessage;
+                return;
+            }
+
             modalAnalysis.innerHTML = 'Analyzing...';
 
             const resumeContent = await getResumeContent(resumeFile);
 
-            await compareContent(
+            await compareFunction(
                 jobDescription,
                 resumeContent,
                 apikey,

@@ -20,6 +20,8 @@
         "button.js",
         "modal.js",
         "ai.js",
+        "ai-openai.js",
+        "ai-google.js",
         "content-linkedin.js"
       ]
     },

@@ -22,13 +22,25 @@ async function getResumeContent(resumeFile) {
     });
 }
 
-async function getApiKey() {
+async function getApiKeyOpenAI() {
     return new Promise((resolve, reject) => {
-        chrome.storage.local.get('api-key', (result) => {
+        chrome.storage.local.get('api-key-openai', (result) => {
             if (chrome.runtime.lastError) {
                 reject(chrome.runtime.lastError);
             } else {
-                resolve(result['api-key']);
+                resolve(result['api-key-openai']);
+            }
+        });
+    });
+}
+
+async function getApiKeyGoogle() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get('api-key-google', (result) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve(result['api-key-google']);
             }
         });
     });

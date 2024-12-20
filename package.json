@@ -9,6 +9,7 @@
 		"clean:node_modules": "rm -rf node_modules"
 	},
 	"devDependencies": {
+		"@iconify/svelte": "^4.1.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
@@ -27,7 +28,6 @@
 		"vite": "^5.4.11"
 	},
 	"dependencies": {
-		"@iconify/svelte": "^4.0.2",
 		"@sveltejs/adapter-static": "^3.0.6",
 		"pdfjs-dist": "^4.9.155"
 	}

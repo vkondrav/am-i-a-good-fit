@@ -5,6 +5,7 @@
     import {onMount} from "svelte";
     import {getDocument} from "pdfjs-dist"
     import type {TextItem} from "pdfjs-dist/types/src/display/api";
+    import Icon from "@iconify/svelte";
     import * as pdfjsLib from 'pdfjs-dist/build/pdf.worker.min.mjs';
 
     async function fileToText(file: File): Promise<string> {
@@ -54,15 +55,23 @@
         }
     }
 
-    let apiKeyInput: HTMLInputElement
+    let apiKeyInputOpenAI: HTMLInputElement
 
-    async function apiKeyChange() {
-        await chrome.storage.local.set({'api-key': apiKeyInput.value});
+    async function apiKeyChangeOpenAI() {
+        await chrome.storage.local.set({'api-key-openai': apiKeyInputOpenAI.value});
+    }
+
+    let apiKeyInputGoogle: HTMLInputElement
+
+    async function apiKeyChangeGoogle() {
+        await chrome.storage.local.set({'api-key-google': apiKeyInputOpenAI.value});
     }
 
     let models = [
         'gpt-4o',
         'gpt-4o-mini',
+        'gemini-1.5-flash',
+        'gemini-2.0-flash-exp'
     ]
 
     let modelInput: HTMLSelectElement
@@ -76,8 +85,12 @@
             file_status = result['resume-file-name'];
         });
 
-        chrome.storage.local.get('api-key', (result) => {
-            apiKeyInput.value = result['api-key'] ?? '';
+        chrome.storage.local.get('api-key-openai', (result) => {
+            apiKeyInputOpenAI.value = result['api-key-openai'] ?? '';
+        });
+
+        chrome.storage.local.get('api-key-google', (result) => {
+            apiKeyInputGoogle.value = result['api-key-google'] ?? '';
         });
 
         chrome.storage.local.get('model', (result) => {
@@ -91,7 +104,7 @@
     });
 </script>
 
-<div class="container w-auto h-auto min-w-96">
+<div class="container w-auto h-auto" style="min-width: 26rem">
     <div class="p-4 pb-8">
 
         <h1 class="text-3xl font-bold">Am I a Good Fit?</h1>
@@ -123,20 +136,6 @@
             </div>
         {/if}
 
-        <input
-                bind:this={apiKeyInput}
-                type="text"
-                placeholder="Open AI API Key"
-                onchange="{() => apiKeyChange()}"
-                class="
-                    input
-                    input-bordered
-                    input-sm
-                    w-full
-                    max-w-xs
-                    mt-2"
-        />
-
         <select
                 bind:this={modelInput}
                 onchange="{() => modelChange()}"
@@ -155,6 +154,54 @@
             {/each}
 
         </select>
+
+        <div class="flex items-center mt-2">
+            <input
+                    bind:this={apiKeyInputOpenAI}
+                    type="text"
+                    placeholder="OpenAI API Key"
+                    onchange="{() => apiKeyChangeOpenAI()}"
+                    class="
+            input
+            input-bordered
+            input-sm
+            w-full
+            max-w-xs"
+            />
+            <button
+                    onclick="{() => window.open('https://platform.openai.com/docs/quickstart')}"
+                    class="
+                    btn-sm
+                    btn-outline
+                    btn-info"
+            >
+                <Icon icon="ic:outline-info" height="1.1rem"/>
+            </button>
+        </div>
+
+        <div class="flex items-center mt-2">
+            <input
+                    bind:this={apiKeyInputGoogle}
+                    type="text"
+                    placeholder="Google API Key"
+                    onchange="{() => apiKeyChangeGoogle()}"
+                    class="
+            input
+            input-bordered
+            input-sm
+            w-full
+            max-w-xs"
+            />
+            <button
+                    onclick="{() => window.open('https://ai.google.dev/gemini-api/docs/quickstart')}"
+                    class="
+                    btn-sm
+                    btn-outline
+                    btn-info"
+            >
+                <Icon icon="ic:outline-info" height="1.1rem"/>
+            </button>
+        </div>
 
     </div>
 
