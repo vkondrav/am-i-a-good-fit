@@ -64,7 +64,7 @@
     let apiKeyInputGoogle: HTMLInputElement
 
     async function apiKeyChangeGoogle() {
-        await chrome.storage.local.set({'api-key-google': apiKeyInputOpenAI.value});
+        await chrome.storage.local.set({'api-key-google': apiKeyInputGoogle.value});
     }
 
     let models = [
