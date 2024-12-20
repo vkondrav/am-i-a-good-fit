@@ -25,22 +25,25 @@ function createModalHTML() {
             #modal-analysis {
                 font-family: Arial, sans-serif;
                 line-height: 1.6;
-                color: #333;
+                color: #333 !important;
                 margin-top: 10px;
             }
             #modal-analysis h1, #modal-analysis h2, #modal-analysis h3 {
-                color: #444;
+                color: #444 !important;
             }
             #modal-analysis p {
                 margin-bottom: 10px;
+                color: #333 !important;
             }
             #modal-analysis ul {
                 list-style-type: disc;
                 margin-left: 20px;
+                color: #333 !important;
             }
             #modal-analysis ol {
                 list-style-type: decimal;
                 margin-left: 20px;
+                color: #333 !important;
             }
             #closeModalButton {
                 position: absolute;
