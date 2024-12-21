@@ -29,9 +29,9 @@
         return text;
     }
 
-    let fileInput: HTMLInputElement
+    let fileInput: HTMLInputElement;
 
-    let file_status: string | undefined = $state(undefined)
+    let fileStatus: string | undefined = $state(undefined);
 
     async function saveFile() {
         console.log('Saving file...');
@@ -46,25 +46,13 @@
                 await chrome.storage.local.set({'resume-file-name': file.name});
 
                 console.log('File saved to Chrome local storage');
-                file_status = file.name;
+                fileStatus = file.name;
             } catch (error) {
                 console.error('Error saving file:', error);
             }
         } else {
-            file_status = 'no file selected';
+            fileStatus = 'no file selected';
         }
-    }
-
-    let apiKeyInputOpenAI: HTMLInputElement
-
-    async function apiKeyChangeOpenAI() {
-        await chrome.storage.local.set({'api-key-openai': apiKeyInputOpenAI.value});
-    }
-
-    let apiKeyInputGoogle: HTMLInputElement
-
-    async function apiKeyChangeGoogle() {
-        await chrome.storage.local.set({'api-key-google': apiKeyInputGoogle.value});
     }
 
     let models = [
@@ -72,33 +60,58 @@
         'gpt-4o-mini',
         'gemini-1.5-flash',
         'gemini-2.0-flash-exp'
-    ]
+    ];
 
-    let modelInput: HTMLSelectElement
+    let modelInput: HTMLSelectElement;
+    let chosenModel = $state("");
 
     async function modelChange() {
-        await chrome.storage.local.set({'model': modelInput.value});
+
+        let value = modelInput.value;
+
+        chosenModel = value;
+
+        await chrome.storage.local.set({'model': value});
+    }
+
+    let modelsShown: boolean = $derived(fileStatus != undefined);
+
+    let apiKeyOpenAIInput: HTMLInputElement;
+    let apiKeyOpenAI: string = $state('');
+    let isApiKeyOpenAIShown: boolean = $derived(chosenModel.startsWith('gpt-') ?? false);
+
+    async function onApiKeyOpenAIChange() {
+        await chrome.storage.local.set({'api-key-openai': apiKeyOpenAI});
+    }
+
+    let apiKeyInputGoogle: HTMLInputElement;
+    let apiKeyGoogle: string = $state('');
+    let isApiKeyGoogleShown: boolean = $derived(chosenModel.startsWith('gemini-') ?? false);
+
+    async function onApiKeyGoogleChange() {
+        await chrome.storage.local.set({'api-key-google': apiKeyGoogle});
     }
 
     onMount(async () => {
         chrome.storage.local.get('resume-file-name', (result) => {
-            file_status = result['resume-file-name'];
+            fileStatus = result['resume-file-name'];
         });
 
         chrome.storage.local.get('api-key-openai', (result) => {
-            apiKeyInputOpenAI.value = result['api-key-openai'] ?? '';
+            apiKeyOpenAI = result['api-key-openai'] ?? '';
         });
 
         chrome.storage.local.get('api-key-google', (result) => {
-            apiKeyInputGoogle.value = result['api-key-google'] ?? '';
+            apiKeyGoogle = result['api-key-google'] ?? '';
         });
 
         chrome.storage.local.get('model', (result) => {
 
-            let model = result['model']
+            let savedModel = result['model'];
 
-            if (model) {
-                modelInput.value = model;
+            if (savedModel) {
+                chosenModel = savedModel;
+                modelInput.value = savedModel;
             }
         });
     });
@@ -109,100 +122,92 @@
 
         <h1 class="text-3xl font-bold">Am I a Good Fit?</h1>
 
-        <div class="label mt-2">
-            <span class="label-text">Upload Resume</span>
-            <span class="label-text-alt">[pdf]</span>
-        </div>
-
         <input
                 bind:this={fileInput}
                 id="file-upload"
                 type="file"
                 accept="application/pdf"
                 onchange="{() => saveFile()}"
-                class="
-                [&::file-selector-button]:hidden
-                pl-2
-                file-input
-                file-input-sm
-                file-input-bordered
-                file-input-warning
-                w-full
-                max-w-xs"/>
+                class="hidden"/>
 
-        {#if file_status}
-            <div class="badge badge-success mt-2">
-                {file_status}
-            </div>
-        {/if}
+        <button
+                class="btn btn-primary w-full mt-2"
+                onclick="{() => fileInput.click()}">
+            {fileStatus ?? 'Select Resume [pdf]'}
+        </button>
 
-        <select
-                bind:this={modelInput}
-                onchange="{() => modelChange()}"
-                class="
+        {#if modelsShown}
+            <select
+                    bind:this={modelInput}
+                    onchange="{() => modelChange()}"
+                    class="
                     select
                     select-bordered
-                    select-sm
                     w-full
                     max-w-xs
                     mt-2"
-        >
-            <option disabled selected>Select Model</option>
+            >
+                <option disabled selected>Select Model</option>
 
-            {#each models as model}
-                <option>{model}</option>
-            {/each}
+                {#each models as model}
+                    <option>{model}</option>
+                {/each}
 
-        </select>
+            </select>
+        {/if}
 
-        <div class="flex items-center mt-2">
-            <input
-                    bind:this={apiKeyInputOpenAI}
-                    type="text"
-                    placeholder="OpenAI API Key"
-                    onchange="{() => apiKeyChangeOpenAI()}"
-                    class="
+        {#if isApiKeyOpenAIShown}
+            <div class="flex items-center mt-2">
+                <input
+                        bind:this={apiKeyOpenAIInput}
+                        bind:value={apiKeyOpenAI}
+                        type="text"
+                        placeholder="OpenAI API Key"
+                        onchange="{() => onApiKeyOpenAIChange()}"
+                        class="
             input
             input-bordered
-            input-sm
             w-full
             max-w-xs"
-            />
-            <button
-                    onclick="{() => window.open('https://platform.openai.com/docs/quickstart')}"
-                    class="
+                />
+                <button
+                        onclick="{() => window.open('https://platform.openai.com/docs/quickstart')}"
+                        class="
                     btn-sm
                     btn-outline
                     btn-info"
-            >
-                <Icon icon="ic:outline-info" height="1.1rem"/>
-            </button>
-        </div>
+                >
+                    <Icon icon="ic:outline-info" height="1.1rem"/>
+                </button>
+            </div>
+        {/if}
 
-        <div class="flex items-center mt-2">
-            <input
-                    bind:this={apiKeyInputGoogle}
-                    type="text"
-                    placeholder="Google API Key"
-                    onchange="{() => apiKeyChangeGoogle()}"
-                    class="
+        {#if isApiKeyGoogleShown}
+
+            <div class="flex items-center mt-2">
+                <input
+                        bind:this={apiKeyInputGoogle}
+                        bind:value={apiKeyGoogle}
+                        type="text"
+                        placeholder="Google API Key"
+                        onchange="{() => onApiKeyGoogleChange()}"
+                        class="
             input
             input-bordered
-            input-sm
             w-full
             max-w-xs"
-            />
-            <button
-                    onclick="{() => window.open('https://ai.google.dev/gemini-api/docs/quickstart')}"
-                    class="
+                />
+                <button
+                        onclick="{() => window.open('https://ai.google.dev/gemini-api/docs/quickstart')}"
+                        class="
                     btn-sm
                     btn-outline
                     btn-info"
-            >
-                <Icon icon="ic:outline-info" height="1.1rem"/>
-            </button>
-        </div>
+                >
+                    <Icon icon="ic:outline-info" height="1.1rem"/>
+                </button>
+            </div>
+        {/if}
 
     </div>
-
 </div>

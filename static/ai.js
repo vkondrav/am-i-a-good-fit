@@ -6,9 +6,11 @@ let prompt = `
     they see on a job board.
     
     Give a score out of 100 to indicate how well the resume matches the job description.
-    Provide ways that their resume can be modified to increase the score.
+    Provide specific ways that their resume can be modified to increase the score with examples.
     
-    Format your output as html but only the content inside the <body> tag. 
+    Format your output as html but only the content inside the <body> tag.
+    
     Exclude the <body> tag.
-    Omit any code wrappers in your response like triple backticks.
-    `;
+    Output html and only html nothing else no matter what.
+    Omit any code wrappers in your response like \`\`\`html.
+`;
