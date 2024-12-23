@@ -17,16 +17,16 @@ async function compareContentGoogle(
         body: JSON.stringify({
             contents: [
                 {
+                    role: 'model',
+                    parts: [{ text: prompt }]
+                },
+                {
                     role: 'user',
                     parts: [{ text: `Job Description: ${jobDescription}` }]
                 },
                 {
                     role: 'user',
                     parts: [{ text: `Resume: ${resumeContent}` }]
-                },
-                {
-                    role: 'model',
-                    parts: [{ text: prompt }]
                 }
             ]
         })

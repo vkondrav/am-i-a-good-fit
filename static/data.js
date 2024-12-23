@@ -46,6 +46,18 @@ async function getApiKeyGoogle() {
     });
 }
 
+async function getApiKeyAnt() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get('api-key-ant', (result) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve(result['api-key-ant']);
+            }
+        });
+    });
+}
+
 async function getModel() {
     return new Promise((resolve, reject) => {
         chrome.storage.local.get('model', (result) => {

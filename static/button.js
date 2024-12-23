@@ -100,13 +100,24 @@ function addAnalysisButton(jobDescriptionContainerSelector, jobDescriptionDetail
 
                 apikey = await getApiKeyOpenAI();
                 compareFunction = compareContentOpenAI;
-                errorMessage = 'Please enter an Open AI API key';
+                errorMessage = 'Please enter an OpenAI API key';
 
             } else if (model.startsWith('gemini-')) {
 
                 apikey = await getApiKeyGoogle();
                 compareFunction = compareContentGoogle;
                 errorMessage = 'Please enter a Google API key';
+
+            } else if (model.startsWith('claude-')) {
+
+                apikey = await getApiKeyAnt();
+                compareFunction = compareContentAnt;
+                errorMessage = 'Please enter an Anthropic API key';
+
+            } else {
+
+                modalAnalysis.innerHTML = 'Invalid model';
+                return;
             }
 
             if (!apikey) {

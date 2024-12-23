@@ -59,7 +59,9 @@
         'gpt-4o',
         'gpt-4o-mini',
         'gemini-1.5-flash',
-        'gemini-2.0-flash-exp'
+        'gemini-2.0-flash-exp',
+        'claude-3-5-sonnet-latest',
+        'claude-3-5-haiku-latest'
     ];
 
     let modelInput: HTMLSelectElement;
@@ -92,6 +94,14 @@
         await chrome.storage.local.set({'api-key-google': apiKeyGoogle});
     }
 
+    let apiKeyInputAnt: HTMLInputElement;
+    let apiKeyAnt: string = $state('');
+    let isApiKeyAntShown: boolean = $derived(chosenModel.startsWith('claude-') ?? false);
+
+    async function onApiKeyAntChange() {
+        await chrome.storage.local.set({'api-key-ant': apiKeyAnt});
+    }
+
     onMount(async () => {
         chrome.storage.local.get('resume-file-name', (result) => {
             fileStatus = result['resume-file-name'];
@@ -103,6 +113,10 @@
 
         chrome.storage.local.get('api-key-google', (result) => {
             apiKeyGoogle = result['api-key-google'] ?? '';
+        });
+
+        chrome.storage.local.get('api-key-ant', (result) => {
+            apiKeyAnt = result['api-key-ant'] ?? '';
         });
 
         chrome.storage.local.get('model', (result) => {
@@ -173,11 +187,12 @@
                 <button
                         onclick="{() => window.open('https://platform.openai.com/docs/quickstart')}"
                         class="
-                    btn-sm
+                    btn
                     btn-outline
-                    btn-info"
+                    btn-info
+                    ml-2"
                 >
-                    <Icon icon="ic:outline-info" height="1.1rem"/>
+                    <Icon icon="ic:outline-info" height="1.5rem"/>
                 </button>
             </div>
         {/if}
@@ -200,11 +215,40 @@
                 <button
                         onclick="{() => window.open('https://ai.google.dev/gemini-api/docs/quickstart')}"
                         class="
-                    btn-sm
+                    btn
                     btn-outline
-                    btn-info"
+                    btn-info
+                    ml-2"
                 >
-                    <Icon icon="ic:outline-info" height="1.1rem"/>
+                    <Icon icon="ic:outline-info" height="1.5rem"/>
+                </button>
+            </div>
+        {/if}
+
+        {#if isApiKeyAntShown}
+
+            <div class="flex items-center mt-2">
+                <input
+                        bind:this={apiKeyInputAnt}
+                        bind:value={apiKeyAnt}
+                        type="text"
+                        placeholder="Anthropic API Key"
+                        onchange="{() => onApiKeyAntChange()}"
+                        class="
+            input
+            input-bordered
+            w-full
+            max-w-xs"
+                />
+                <button
+                        onclick="{() => window.open('https://docs.anthropic.com/en/docs/initial-setup')}"
+                        class="
+                    btn
+                    btn-outline
+                    btn-info
+                    ml-2"
+                >
+                    <Icon icon="ic:outline-info" height="1.5rem"/>
                 </button>
             </div>
         {/if}
