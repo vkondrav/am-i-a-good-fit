@@ -102,6 +102,12 @@
         await chrome.storage.local.set({'api-key-ant': apiKeyAnt});
     }
 
+    let areJobBoardButtonsShown: boolean = $derived(
+        (isApiKeyAntShown && apiKeyAnt != '') ||
+        (isApiKeyGoogleShown && apiKeyGoogle != '') ||
+        (isApiKeyOpenAIShown && apiKeyOpenAI != '')
+    );
+
     onMount(async () => {
         chrome.storage.local.get('resume-file-name', (result) => {
             fileStatus = result['resume-file-name'];
@@ -134,7 +140,7 @@
 <div class="container w-auto h-auto" style="min-width: 26rem">
     <div class="p-4 pb-8">
 
-        <h1 class="text-3xl font-bold">Am I a Good Fit?</h1>
+        <h1 class="text-3xl font-bold text-center">Am I a Good Fit?</h1>
 
         <input
                 bind:this={fileInput}
@@ -249,6 +255,40 @@
                     ml-2"
                 >
                     <Icon icon="ic:outline-info" height="1.5rem"/>
+                </button>
+            </div>
+        {/if}
+
+        {#if areJobBoardButtonsShown}
+            <div class="flex justify-between mt-2">
+                <button
+                        onclick="{() => window.open('https://www.linkedin.com/jobs')}"
+                        class="
+                    btn
+                    btn-outline
+                    btn-accent"
+                >
+                    <Icon icon="simple-icons:linkedin" height="1.5rem"/>
+                </button>
+                <button
+                        onclick="{() => window.open('https://www.indeed.com')}"
+                        class="
+                    btn
+                    btn-outline
+                    btn-accent
+                    ml-2"
+                >
+                    <Icon icon="simple-icons:indeed" height="1.5rem"/>
+                </button>
+                <button
+                        onclick="{() => window.open('https://www.monster.com')}"
+                        class="
+                    btn
+                    btn-outline
+                    btn-accent
+                    ml-2"
+                >
+                    <Icon icon="simple-icons:monster" height="1.5rem"/>
                 </button>
             </div>
         {/if}
