@@ -45,6 +45,9 @@ function createModalHTML() {
                 margin-left: 20px;
                 color: #333 !important;
             }
+            #modal-analysis blockquote {
+                color: #333 !important  ;
+            }
             #closeModalButton {
                 position: absolute;
                 top: 10px;
