@@ -26,6 +26,7 @@ vite.config.ts.timestamp-*
 # Extensions
 *.pem
 *.crx
+*.zip
 
 # Node
 package-lock.json
