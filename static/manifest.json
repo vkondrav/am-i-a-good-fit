@@ -1,11 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Am I a Good Fit?",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "Inline analysis of job description and your resume",
   "permissions": [
-    "storage",
-    "activeTab"
+    "storage"
   ],
   "action": {
     "default_popup": "index.html"
