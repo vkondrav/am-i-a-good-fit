@@ -22,54 +22,33 @@ async function getResumeContent(resumeFile) {
     });
 }
 
-async function getApiKeyOpenAI() {
+async function getApiKey(key) {
     return new Promise((resolve, reject) => {
-        chrome.storage.local.get('api-key-openai', (result) => {
+        chrome.storage.local.get(key, (result) => {
             if (chrome.runtime.lastError) {
                 reject(chrome.runtime.lastError);
             } else {
-                resolve(result['api-key-openai']);
+                resolve(result[key]);
             }
         });
     });
+}
+
+async function getApiKeyOpenAI() {
+    return getApiKey('api-key-openai');
 }
 
 async function getApiKeyGoogle() {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.get('api-key-google', (result) => {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-            } else {
-                resolve(result['api-key-google']);
-            }
-        });
-    });
+    return getApiKey('api-key-google');
 }
 
 async function getApiKeyAnt() {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.get('api-key-ant', (result) => {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-            } else {
-                resolve(result['api-key-ant']);
-            }
-        });
-    });
+    return getApiKey('api-key-ant');
 }
 
 async function getApiKeyDeepSeek() {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.get('api-key-deepseek', (result) => {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-            } else {
-                resolve(result['api-key-deepseek']);
-            }
-        });
-    });
+    return getApiKey('api-key-deepseek');
 }
-
 
 async function getModel() {
     return new Promise((resolve, reject) => {
