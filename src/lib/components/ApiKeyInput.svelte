@@ -4,13 +4,9 @@
 
     let {
         apiKey,
-        placeholder,
-        infoUrl,
         onApiKeyChange
     }: {
         apiKey: ApiKey,
-        placeholder: string,
-        infoUrl: string,
         onApiKeyChange: () => void
     } = $props();
 
@@ -20,7 +16,7 @@
     <input
             bind:value={apiKey.key}
             type="text"
-            placeholder={placeholder}
+            placeholder={apiKey.description}
             onchange="{() => onApiKeyChange()}"
             class="
             input
@@ -29,7 +25,7 @@
             max-w-xs"
     />
     <button
-            onclick="{() => window.open(infoUrl)}"
+            onclick="{() => window.open(apiKey.url)}"
             class="
                     btn
                     btn-outline

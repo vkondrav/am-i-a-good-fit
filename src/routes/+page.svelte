@@ -35,7 +35,7 @@
 
     let fileStatus: string | undefined = $state(undefined);
 
-    async function saveFile() {
+    async function onFileSave() {
         console.log('Saving file...');
 
         if (fileInput.files && fileInput.files.length > 0) {
@@ -68,11 +68,13 @@
     ];
 
     let modelInput: HTMLSelectElement;
-    let chosenModel = $state("");
+    let chosenModel: string = $state("");
 
-    async function modelChange() {
+    async function onModelChange() {
 
         let value = modelInput.value;
+
+        console.log('Model changed to ', value);
 
         chosenModel = value;
 
@@ -81,33 +83,44 @@
 
     let modelsShown: boolean = $derived(fileStatus != undefined);
 
-    let apiKeyOpenAI: ApiKey = $state({key: ""});
+    async function onApiKeyChange(apiKey: ApiKey) {
+
+        console.log('API Key changed ', apiKey.name);
+
+        await chrome.storage.local.set({[apiKey.name]: apiKey.key});
+    }
+
+    let apiKeyOpenAI: ApiKey = $state({
+        name: "api-key-openai",
+        description: "OpenAI API Key",
+        url: "https://platform.openai.com/docs/quickstart",
+        key: ""
+    });
     let isApiKeyOpenAIShown: boolean = $derived(chosenModel.startsWith('gpt-') ?? false);
 
-    async function onApiKeyOpenAIChange() {
-        await chrome.storage.local.set({'api-key-openai': apiKeyOpenAI.key});
-    }
-
-    let apiKeyGoogle: ApiKey = $state({key: ""});
+    let apiKeyGoogle: ApiKey = $state({
+        name: "api-key-google",
+        description: "Google API Key",
+        url: "https://ai.google.dev/gemini-api/docs/quickstart",
+        key: ""
+    });
     let isApiKeyGoogleShown: boolean = $derived(chosenModel.startsWith('gemini-') ?? false);
 
-    async function onApiKeyGoogleChange() {
-        await chrome.storage.local.set({'api-key-google': apiKeyGoogle.key});
-    }
-
-    let apiKeyAnt: ApiKey = $state({key: ""});
+    let apiKeyAnt: ApiKey = $state({
+        name: "api-key-ant",
+        description: "Anthropic API Key",
+        url: "https://docs.anthropic.com/en/docs/initial-setup",
+        key: ""
+    });
     let isApiKeyAntShown: boolean = $derived(chosenModel.startsWith('claude-') ?? false);
 
-    async function onApiKeyAntChange() {
-        await chrome.storage.local.set({'api-key-ant': apiKeyAnt.key});
-    }
-
-    let apiKeyDeepSeek: ApiKey = $state({key: ""});
+    let apiKeyDeepSeek: ApiKey = $state({
+        name: "api-key-deepseek",
+        description: "DeepSeek API Key",
+        url: "https://api-docs.deepseek.com",
+        key: ""
+    });
     let isApiKeyDeepSeekShown: boolean = $derived(chosenModel.startsWith('deepseek-') ?? false);
-
-    async function onApiKeyDeepSeekChange() {
-        await chrome.storage.local.set({'api-key-deepseek': apiKeyDeepSeek.key});
-    }
 
     let areJobBoardButtonsShown: boolean = $derived(
         (isApiKeyAntShown && apiKeyAnt.key != '') ||
@@ -116,29 +129,29 @@
         (isApiKeyDeepSeekShown && apiKeyDeepSeek.key != '')
     );
 
-    onMount(async () => {
+    function retrieveResumeFileStatus() {
         chrome.storage.local.get('resume-file-name', (result) => {
             fileStatus = result['resume-file-name'];
         });
+    }
 
-        chrome.storage.local.get('api-key-openai', (result) => {
-            apiKeyOpenAI.key = result['api-key-openai'] ?? '';
+    function retrieveApiKeys() {
+        let apiKeys: ApiKey[] = [
+            apiKeyOpenAI,
+            apiKeyGoogle,
+            apiKeyAnt,
+            apiKeyDeepSeek
+        ];
+
+        apiKeys.forEach(apiKey => {
+            chrome.storage.local.get(apiKey.name, (result) => {
+                apiKey.key = result[apiKey.name] ?? '';
+            });
         });
+    }
 
-        chrome.storage.local.get('api-key-google', (result) => {
-            apiKeyGoogle.key = result['api-key-google'] ?? '';
-        });
-
-        chrome.storage.local.get('api-key-ant', (result) => {
-            apiKeyAnt.key = result['api-key-ant'] ?? '';
-        });
-
-        chrome.storage.local.get('api-key-deepseek', (result) => {
-            apiKeyDeepSeek.key = result['api-key-deepseek'] ?? '';
-        });
-
+    function retrieveModel() {
         chrome.storage.local.get('model', (result) => {
-
             let savedModel = result['model'];
 
             if (savedModel) {
@@ -146,6 +159,12 @@
                 modelInput.value = savedModel;
             }
         });
+    }
+
+    onMount(async () => {
+        retrieveResumeFileStatus();
+        retrieveApiKeys();
+        retrieveModel();
     });
 </script>
 
@@ -159,7 +178,7 @@
                 id="file-upload"
                 type="file"
                 accept="application/pdf"
-                onchange="{() => saveFile()}"
+                onchange="{() => onFileSave()}"
                 class="hidden"/>
 
         <button
@@ -171,7 +190,7 @@
         {#if modelsShown}
             <select
                     bind:this={modelInput}
-                    onchange="{() => modelChange()}"
+                    onchange="{() => onModelChange()}"
                     class="
                     select
                     select-bordered
@@ -192,9 +211,7 @@
 
             <ApiKeyInput
                     apiKey={apiKeyOpenAI}
-                    placeholder="OpenAI API Key"
-                    infoUrl="https://beta.openai.com/docs/developer-quickstart"
-                    onApiKeyChange={onApiKeyOpenAIChange}
+                    onApiKeyChange={() => onApiKeyChange(apiKeyOpenAI)}
             />
 
         {/if}
@@ -203,9 +220,7 @@
 
             <ApiKeyInput
                     apiKey={apiKeyGoogle}
-                    placeholder="Google API Key"
-                    infoUrl="https://cloud.google.com/docs/authentication/api-keys"
-                    onApiKeyChange={onApiKeyGoogleChange}
+                    onApiKeyChange={() => onApiKeyChange(apiKeyGoogle)}
             />
 
         {/if}
@@ -214,9 +229,7 @@
 
             <ApiKeyInput
                     apiKey={apiKeyAnt}
-                    placeholder="Ant API Key"
-                    infoUrl="https://claude.ai/docs"
-                    onApiKeyChange={onApiKeyAntChange}
+                    onApiKeyChange={() => onApiKeyChange(apiKeyAnt)}
             />
 
         {/if}
@@ -225,9 +238,7 @@
 
             <ApiKeyInput
                     apiKey={apiKeyDeepSeek}
-                    placeholder="DeepSeek API Key"
-                    infoUrl="https://deepseek.ai/docs"
-                    onApiKeyChange={onApiKeyDeepSeekChange}
+                    onApiKeyChange={() => onApiKeyChange(apiKeyDeepSeek)}
             />
         {/if}
 
