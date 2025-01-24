@@ -6,6 +6,8 @@
     import {getDocument} from "pdfjs-dist"
     import type {TextItem} from "pdfjs-dist/types/src/display/api";
     import Icon from "@iconify/svelte";
+    import ApiKeyInput from "@/components/ApiKeyInput.svelte";
+    import type {ApiKey} from "@/types/ApiKey";
     import * as pdfjsLib from 'pdfjs-dist/build/pdf.worker.min.mjs';
 
     async function fileToText(file: File): Promise<string> {
@@ -79,43 +81,39 @@
 
     let modelsShown: boolean = $derived(fileStatus != undefined);
 
-    let apiKeyOpenAIInput: HTMLInputElement;
-    let apiKeyOpenAI: string = $state('');
+    let apiKeyOpenAI: ApiKey = $state({key: ""});
     let isApiKeyOpenAIShown: boolean = $derived(chosenModel.startsWith('gpt-') ?? false);
 
     async function onApiKeyOpenAIChange() {
-        await chrome.storage.local.set({'api-key-openai': apiKeyOpenAI});
+        await chrome.storage.local.set({'api-key-openai': apiKeyOpenAI.key});
     }
 
-    let apiKeyInputGoogle: HTMLInputElement;
-    let apiKeyGoogle: string = $state('');
+    let apiKeyGoogle: ApiKey = $state({key: ""});
     let isApiKeyGoogleShown: boolean = $derived(chosenModel.startsWith('gemini-') ?? false);
 
     async function onApiKeyGoogleChange() {
-        await chrome.storage.local.set({'api-key-google': apiKeyGoogle});
+        await chrome.storage.local.set({'api-key-google': apiKeyGoogle.key});
     }
 
-    let apiKeyInputAnt: HTMLInputElement;
-    let apiKeyAnt: string = $state('');
+    let apiKeyAnt: ApiKey = $state({key: ""});
     let isApiKeyAntShown: boolean = $derived(chosenModel.startsWith('claude-') ?? false);
 
     async function onApiKeyAntChange() {
-        await chrome.storage.local.set({'api-key-ant': apiKeyAnt});
+        await chrome.storage.local.set({'api-key-ant': apiKeyAnt.key});
     }
 
-    let apiKeyInputDeepSeek: HTMLInputElement;
-    let apiKeyDeepSeek: string = $state('');
+    let apiKeyDeepSeek: ApiKey = $state({key: ""});
     let isApiKeyDeepSeekShown: boolean = $derived(chosenModel.startsWith('deepseek-') ?? false);
 
     async function onApiKeyDeepSeekChange() {
-        await chrome.storage.local.set({'api-key-deepseek': apiKeyDeepSeek});
+        await chrome.storage.local.set({'api-key-deepseek': apiKeyDeepSeek.key});
     }
 
     let areJobBoardButtonsShown: boolean = $derived(
-        (isApiKeyAntShown && apiKeyAnt != '') ||
-        (isApiKeyGoogleShown && apiKeyGoogle != '') ||
-        (isApiKeyOpenAIShown && apiKeyOpenAI != '') ||
-        (isApiKeyDeepSeekShown && apiKeyDeepSeek != '')
+        (isApiKeyAntShown && apiKeyAnt.key != '') ||
+        (isApiKeyGoogleShown && apiKeyGoogle.key != '') ||
+        (isApiKeyOpenAIShown && apiKeyOpenAI.key != '') ||
+        (isApiKeyDeepSeekShown && apiKeyDeepSeek.key != '')
     );
 
     onMount(async () => {
@@ -124,19 +122,19 @@
         });
 
         chrome.storage.local.get('api-key-openai', (result) => {
-            apiKeyOpenAI = result['api-key-openai'] ?? '';
+            apiKeyOpenAI.key = result['api-key-openai'] ?? '';
         });
 
         chrome.storage.local.get('api-key-google', (result) => {
-            apiKeyGoogle = result['api-key-google'] ?? '';
+            apiKeyGoogle.key = result['api-key-google'] ?? '';
         });
 
         chrome.storage.local.get('api-key-ant', (result) => {
-            apiKeyAnt = result['api-key-ant'] ?? '';
+            apiKeyAnt.key = result['api-key-ant'] ?? '';
         });
 
         chrome.storage.local.get('api-key-deepseek', (result) => {
-            apiKeyDeepSeek = result['api-key-deepseek'] ?? '';
+            apiKeyDeepSeek.key = result['api-key-deepseek'] ?? '';
         });
 
         chrome.storage.local.get('model', (result) => {
@@ -191,114 +189,46 @@
         {/if}
 
         {#if isApiKeyOpenAIShown}
-            <div class="flex items-center mt-2">
-                <input
-                        bind:this={apiKeyOpenAIInput}
-                        bind:value={apiKeyOpenAI}
-                        type="text"
-                        placeholder="OpenAI API Key"
-                        onchange="{() => onApiKeyOpenAIChange()}"
-                        class="
-            input
-            input-bordered
-            w-full
-            max-w-xs"
-                />
-                <button
-                        onclick="{() => window.open('https://platform.openai.com/docs/quickstart')}"
-                        class="
-                    btn
-                    btn-outline
-                    btn-info
-                    ml-2"
-                >
-                    <Icon icon="ic:outline-info" height="1.5rem"/>
-                </button>
-            </div>
+
+            <ApiKeyInput
+                    apiKey={apiKeyOpenAI}
+                    placeholder="OpenAI API Key"
+                    infoUrl="https://beta.openai.com/docs/developer-quickstart"
+                    onApiKeyChange={onApiKeyOpenAIChange}
+            />
+
         {/if}
 
         {#if isApiKeyGoogleShown}
 
-            <div class="flex items-center mt-2">
-                <input
-                        bind:this={apiKeyInputGoogle}
-                        bind:value={apiKeyGoogle}
-                        type="text"
-                        placeholder="Google API Key"
-                        onchange="{() => onApiKeyGoogleChange()}"
-                        class="
-            input
-            input-bordered
-            w-full
-            max-w-xs"
-                />
-                <button
-                        onclick="{() => window.open('https://ai.google.dev/gemini-api/docs/quickstart')}"
-                        class="
-                    btn
-                    btn-outline
-                    btn-info
-                    ml-2"
-                >
-                    <Icon icon="ic:outline-info" height="1.5rem"/>
-                </button>
-            </div>
+            <ApiKeyInput
+                    apiKey={apiKeyGoogle}
+                    placeholder="Google API Key"
+                    infoUrl="https://cloud.google.com/docs/authentication/api-keys"
+                    onApiKeyChange={onApiKeyGoogleChange}
+            />
+
         {/if}
 
         {#if isApiKeyAntShown}
 
-            <div class="flex items-center mt-2">
-                <input
-                        bind:this={apiKeyInputAnt}
-                        bind:value={apiKeyAnt}
-                        type="text"
-                        placeholder="Anthropic API Key"
-                        onchange="{() => onApiKeyAntChange()}"
-                        class="
-            input
-            input-bordered
-            w-full
-            max-w-xs"
-                />
-                <button
-                        onclick="{() => window.open('https://docs.anthropic.com/en/docs/initial-setup')}"
-                        class="
-                    btn
-                    btn-outline
-                    btn-info
-                    ml-2"
-                >
-                    <Icon icon="ic:outline-info" height="1.5rem"/>
-                </button>
-            </div>
+            <ApiKeyInput
+                    apiKey={apiKeyAnt}
+                    placeholder="Ant API Key"
+                    infoUrl="https://claude.ai/docs"
+                    onApiKeyChange={onApiKeyAntChange}
+            />
+
         {/if}
 
         {#if isApiKeyDeepSeekShown}
 
-            <div class="flex items-center mt-2">
-                <input
-                        bind:this={apiKeyInputDeepSeek}
-                        bind:value={apiKeyDeepSeek}
-                        type="text"
-                        placeholder="DeepSeek API Key"
-                        onchange="{() => onApiKeyDeepSeekChange()}"
-                        class="
-            input
-            input-bordered
-            w-full
-            max-w-xs"
-                />
-                <button
-                        onclick="{() => window.open('https://api-docs.deepseek.com/')}"
-                        class="
-                    btn
-                    btn-outline
-                    btn-info
-                    ml-2"
-                >
-                    <Icon icon="ic:outline-info" height="1.5rem"/>
-                </button>
-            </div>
+            <ApiKeyInput
+                    apiKey={apiKeyDeepSeek}
+                    placeholder="DeepSeek API Key"
+                    infoUrl="https://deepseek.ai/docs"
+                    onApiKeyChange={onApiKeyDeepSeekChange}
+            />
         {/if}
 
         {#if areJobBoardButtonsShown}
