@@ -2,6 +2,8 @@
 
 https://github.com/user-attachments/assets/f99bfdcf-217f-4fe1-89e5-d7a8137778c6
 
+Available on [Chrome Web Store](https://chromewebstore.google.com/detail/am-i-a-good-fit/geabllccglfnbbhgbnlacpnniaiafnno)
+
 ## Overview
 
 Use this Chrome Extension to easily evaluate your resume against job descriptions to identify strengths and areas for improvement.
