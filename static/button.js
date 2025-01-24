@@ -114,6 +114,12 @@ function addAnalysisButton(jobDescriptionContainerSelector, jobDescriptionDetail
                 compareFunction = compareContentAnt;
                 errorMessage = 'Please enter an Anthropic API key';
 
+            } else if (model.startsWith('deepseek-')) {
+
+                apikey = await getApiKeyDeepSeek();
+                compareFunction = compareContentDeepSeek;
+                errorMessage = 'Please enter a DeepSeek API key';
+
             } else {
 
                 modalAnalysis.innerHTML = 'Invalid model';

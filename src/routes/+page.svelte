@@ -61,7 +61,8 @@
         'gemini-1.5-flash',
         'gemini-2.0-flash-exp',
         'claude-3-5-sonnet-latest',
-        'claude-3-5-haiku-latest'
+        'claude-3-5-haiku-latest',
+        'deepseek-chat',
     ];
 
     let modelInput: HTMLSelectElement;
@@ -102,10 +103,19 @@
         await chrome.storage.local.set({'api-key-ant': apiKeyAnt});
     }
 
+    let apiKeyInputDeepSeek: HTMLInputElement;
+    let apiKeyDeepSeek: string = $state('');
+    let isApiKeyDeepSeekShown: boolean = $derived(chosenModel.startsWith('deepseek-') ?? false);
+
+    async function onApiKeyDeepSeekChange() {
+        await chrome.storage.local.set({'api-key-deepseek': apiKeyDeepSeek});
+    }
+
     let areJobBoardButtonsShown: boolean = $derived(
         (isApiKeyAntShown && apiKeyAnt != '') ||
         (isApiKeyGoogleShown && apiKeyGoogle != '') ||
-        (isApiKeyOpenAIShown && apiKeyOpenAI != '')
+        (isApiKeyOpenAIShown && apiKeyOpenAI != '') ||
+        (isApiKeyDeepSeekShown && apiKeyDeepSeek != '')
     );
 
     onMount(async () => {
@@ -123,6 +133,10 @@
 
         chrome.storage.local.get('api-key-ant', (result) => {
             apiKeyAnt = result['api-key-ant'] ?? '';
+        });
+
+        chrome.storage.local.get('api-key-deepseek', (result) => {
+            apiKeyDeepSeek = result['api-key-deepseek'] ?? '';
         });
 
         chrome.storage.local.get('model', (result) => {
@@ -248,6 +262,34 @@
                 />
                 <button
                         onclick="{() => window.open('https://docs.anthropic.com/en/docs/initial-setup')}"
+                        class="
+                    btn
+                    btn-outline
+                    btn-info
+                    ml-2"
+                >
+                    <Icon icon="ic:outline-info" height="1.5rem"/>
+                </button>
+            </div>
+        {/if}
+
+        {#if isApiKeyDeepSeekShown}
+
+            <div class="flex items-center mt-2">
+                <input
+                        bind:this={apiKeyInputDeepSeek}
+                        bind:value={apiKeyDeepSeek}
+                        type="text"
+                        placeholder="DeepSeek API Key"
+                        onchange="{() => onApiKeyDeepSeekChange()}"
+                        class="
+            input
+            input-bordered
+            w-full
+            max-w-xs"
+                />
+                <button
+                        onclick="{() => window.open('https://api-docs.deepseek.com/')}"
                         class="
                     btn
                     btn-outline

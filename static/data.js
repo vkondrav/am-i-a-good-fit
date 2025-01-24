@@ -58,6 +58,19 @@ async function getApiKeyAnt() {
     });
 }
 
+async function getApiKeyDeepSeek() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get('api-key-deepseek', (result) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve(result['api-key-deepseek']);
+            }
+        });
+    });
+}
+
+
 async function getModel() {
     return new Promise((resolve, reject) => {
         chrome.storage.local.get('model', (result) => {
