@@ -57,28 +57,13 @@
         }
     }
 
-    let models = [
-        'gpt-4o',
-        'gpt-4o-mini',
-        'gemini-1.5-flash',
-        'gemini-2.0-flash-exp',
-        'claude-3-5-sonnet-latest',
-        'claude-3-5-haiku-latest',
-        'deepseek-chat',
-    ];
-
-    let modelInput: HTMLSelectElement;
     let chosenModel: string = $state("");
 
     async function onModelChange() {
 
-        let value = modelInput.value;
+        console.log('Model changed to ', chosenModel);
 
-        console.log('Model changed to ', value);
-
-        chosenModel = value;
-
-        await chrome.storage.local.set({'model': value});
+        await chrome.storage.local.set({'model': chosenModel});
     }
 
     let modelsShown: boolean = $derived(fileStatus != undefined);
@@ -94,33 +79,44 @@
         name: "api-key-openai",
         description: "OpenAI API Key",
         url: "https://platform.openai.com/docs/quickstart",
-        key: ""
+        key: "",
+        supported_models: new Set(['gpt-4o', 'gpt-4o-mini'])
     });
-    let isApiKeyOpenAIShown: boolean = $derived(chosenModel.startsWith('gpt-') ?? false);
+    let isApiKeyOpenAIShown: boolean = $derived(apiKeyOpenAI.supported_models.has(chosenModel));
 
     let apiKeyGoogle: ApiKey = $state({
         name: "api-key-google",
         description: "Google API Key",
         url: "https://ai.google.dev/gemini-api/docs/quickstart",
-        key: ""
+        key: "",
+        supported_models: new Set(['gemini-1.5-flash', 'gemini-2.0-flash-exp'])
     });
-    let isApiKeyGoogleShown: boolean = $derived(chosenModel.startsWith('gemini-') ?? false);
+    let isApiKeyGoogleShown: boolean = $derived(apiKeyGoogle.supported_models.has(chosenModel));
 
     let apiKeyAnt: ApiKey = $state({
         name: "api-key-ant",
         description: "Anthropic API Key",
         url: "https://docs.anthropic.com/en/docs/initial-setup",
-        key: ""
+        key: "",
+        supported_models: new Set(['claude-3-5-sonnet-latest', 'claude-3-5-haiku-latest'])
     });
-    let isApiKeyAntShown: boolean = $derived(chosenModel.startsWith('claude-') ?? false);
+    let isApiKeyAntShown: boolean = $derived(apiKeyAnt.supported_models.has(chosenModel));
 
     let apiKeyDeepSeek: ApiKey = $state({
         name: "api-key-deepseek",
         description: "DeepSeek API Key",
         url: "https://api-docs.deepseek.com",
-        key: ""
+        key: "",
+        supported_models: new Set(['deepseek-chat'])
     });
-    let isApiKeyDeepSeekShown: boolean = $derived(chosenModel.startsWith('deepseek-') ?? false);
+    let isApiKeyDeepSeekShown: boolean = $derived(apiKeyDeepSeek.supported_models.has(chosenModel));
+
+    let models = Array.from(new Set([
+        ...apiKeyOpenAI.supported_models,
+        ...apiKeyGoogle.supported_models,
+        ...apiKeyAnt.supported_models,
+        ...apiKeyDeepSeek.supported_models
+    ]));
 
     let areJobBoardButtonsShown: boolean = $derived(
         (isApiKeyAntShown && apiKeyAnt.key != '') ||
@@ -152,12 +148,7 @@
 
     function retrieveModel() {
         chrome.storage.local.get('model', (result) => {
-            let savedModel = result['model'];
-
-            if (savedModel) {
-                chosenModel = savedModel;
-                modelInput.value = savedModel;
-            }
+            chosenModel = result['model'] ?? '';
         });
     }
 
@@ -189,7 +180,7 @@
 
         {#if modelsShown}
             <select
-                    bind:this={modelInput}
+                    bind:value={chosenModel}
                     onchange="{() => onModelChange()}"
                     class="
                     select
