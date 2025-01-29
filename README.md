@@ -15,6 +15,7 @@ nothing to sign up, for nothing to pay for, and no middleware that snoops on you
 - OpenAI (gp-4o, gpt-4o-mini)
 - Google (gemini-1.5-flash, gemini-2.0-flash)
 - Anthropic (claude-3-5-sonnet, claude-3-5-haiku)
+- DeepSeek (deepseek-chat)
 
 ## Supported Job Boards
 
