@@ -28,25 +28,63 @@ function createModalHTML() {
                 color: #333 !important;
                 margin-top: 10px;
             }
-            #modal-analysis h1, #modal-analysis h2, #modal-analysis h3 {
+            #modal-analysis h1 {
+                font-size: 24px;
                 color: #444 !important;
+                margin-bottom: 10px;
+            }
+            #modal-analysis h2 {
+                font-size: 20px;
+                color: #444 !important;
+                margin-bottom: 8px;
+            }
+            #modal-analysis h3 {
+                font-size: 18px;
+                color: #444 !important;
+                margin-bottom: 6px;
             }
             #modal-analysis p {
                 margin-bottom: 10px;
                 color: #333 !important;
             }
             #modal-analysis ul {
-                list-style-type: disc;
+                list-style-type: none;
                 margin-left: 20px;
                 color: #333 !important;
             }
             #modal-analysis ol {
-                list-style-type: decimal;
+                list-style-type: none;
                 margin-left: 20px;
                 color: #333 !important;
             }
             #modal-analysis blockquote {
-                color: #333 !important  ;
+                color: #333 !important;
+                margin: 10px 0;
+                padding: 10px;
+                background-color: #f1f1f1;
+                border-left: 4px solid #ccc;
+            }
+            #modal-analysis .score strong {
+                font-size: 18px;
+                color: #007bff;
+            }
+            #modal-analysis .section {
+                margin-top: 20px;
+            }
+            #modal-analysis .section ul {
+                padding-left: 20px;
+                list-style-type: none;
+            }
+            #modal-analysis .section ul li {
+                margin-bottom: 5px;
+            }
+            #modal-analysis .disclaimer {
+                margin-top: 20px;
+                font-size: 12px;
+                color: #777;
+            }
+            #modal-analysis .container {
+                background-color: transparent !important;
             }
             #closeModalButton {
                 position: absolute;

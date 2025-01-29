@@ -58,6 +58,14 @@ function createAnalysisButton(id) {
     return button;
 }
 
+function cleanResult(result) {
+    return removeTripleBacktickLines(result)
+}
+
+function removeTripleBacktickLines(input) {
+    return input.split('\n').filter(line => !line.includes('```')).join('\n');
+}
+
 function addAnalysisButton(jobDescriptionContainerSelector, jobDescriptionDetailsSelector) {
     let id = `analysis-button`
 
@@ -141,7 +149,8 @@ function addAnalysisButton(jobDescriptionContainerSelector, jobDescriptionDetail
                 apikey,
                 model,
                 (result) => {
-                    modalAnalysis.innerHTML = result;
+
+                    modalAnalysis.innerHTML = cleanResult(result);
                 }
             );
 
