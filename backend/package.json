@@ -1,0 +1,16 @@
+{
+  "name": "am-i-a-good-fit",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "start": "wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^3.107.2"
+  },
+  "dependencies": {
+    "openai": "^4.82.0"
+  }
+}
