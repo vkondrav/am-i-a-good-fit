@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: 'latest'
 
+      - name: Change Directory to Chrome App
+        run: cd chrome-app/
+
       - name: Install dependencies
         run: npm install
 

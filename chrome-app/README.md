@@ -1,9 +1,7 @@
-## Supported AI Models
+## Overview
 
-- OpenAI (gp-4o, gpt-4o-mini)
-- Google (gemini-1.5-flash, gemini-2.0-flash)
-- Anthropic (claude-3-5-sonnet, claude-3-5-haiku)
-- DeepSeek (deepseek-chat)
+Chrome Web Extension to evaluate your resume against job descriptions to 
+identify strengths and areas for improvement.
 
 ## Supported Job Boards
 
