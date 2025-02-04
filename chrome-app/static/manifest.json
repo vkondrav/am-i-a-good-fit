@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Am I a Good Fit?",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Inline analysis of job description and your resume",
   "permissions": [
     "storage"
@@ -19,10 +19,6 @@
         "button.js",
         "modal.js",
         "ai.js",
-        "ai-openai.js",
-        "ai-google.js",
-        "ai-ant.js",
-        "ai-deepseek.js",
         "content-linkedin.js"
       ]
     },
@@ -35,10 +31,6 @@
         "button.js",
         "modal.js",
         "ai.js",
-        "ai-openai.js",
-        "ai-google.js",
-        "ai-ant.js",
-        "ai-deepseek.js",
         "content-indeed.js"
       ]
     },
@@ -52,10 +44,6 @@
         "button.js",
         "modal.js",
         "ai.js",
-        "ai-openai.js",
-        "ai-google.js",
-        "ai-ant.js",
-        "ai-deepseek.js",
         "content-monster.js"
       ]
     }

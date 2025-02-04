@@ -93,63 +93,14 @@ function addAnalysisButton(jobDescriptionContainerSelector, jobDescriptionDetail
                 return;
             }
 
-            const model = await getModel();
-
-            if (!model) {
-                modalAnalysis.innerHTML = 'Please select a model';
-                return;
-            }
-
-            let apikey;
-            let errorMessage;
-            let compareFunction;
-
-            if (model.startsWith('gpt-')) {
-
-                apikey = await getApiKeyOpenAI();
-                compareFunction = compareContentOpenAI;
-                errorMessage = 'Please enter an OpenAI API key';
-
-            } else if (model.startsWith('gemini-')) {
-
-                apikey = await getApiKeyGoogle();
-                compareFunction = compareContentGoogle;
-                errorMessage = 'Please enter a Google API key';
-
-            } else if (model.startsWith('claude-')) {
-
-                apikey = await getApiKeyAnt();
-                compareFunction = compareContentAnt;
-                errorMessage = 'Please enter an Anthropic API key';
-
-            } else if (model.startsWith('deepseek-')) {
-
-                apikey = await getApiKeyDeepSeek();
-                compareFunction = compareContentDeepSeek;
-                errorMessage = 'Please enter a DeepSeek API key';
-
-            } else {
-
-                modalAnalysis.innerHTML = 'Invalid model';
-                return;
-            }
-
-            if (!apikey) {
-                modalAnalysis.innerHTML = errorMessage;
-                return;
-            }
-
             modalAnalysis.innerHTML = 'Analyzing...';
 
             const resumeContent = await getResumeContent(resumeFile);
 
-            await compareFunction(
+            await compareContent(
                 jobDescription,
                 resumeContent,
-                apikey,
-                model,
                 (result) => {
-
                     modalAnalysis.innerHTML = cleanResult(result);
                 }
             );
