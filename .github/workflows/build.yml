@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: chrome-app/
 
     steps:
       - name: Checkout repository
@@ -17,9 +20,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 'latest'
-
-      - name: Change Directory to Chrome App
-        run: cd chrome-app/
 
       - name: Install dependencies
         run: npm install
