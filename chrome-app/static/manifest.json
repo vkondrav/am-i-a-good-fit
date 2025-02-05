@@ -18,7 +18,7 @@
         "data.js",
         "button.js",
         "modal.js",
-        "ai.js",
+        "client.js",
         "content-linkedin.js"
       ]
     },
@@ -30,7 +30,7 @@
         "data.js",
         "button.js",
         "modal.js",
-        "ai.js",
+        "client.js",
         "content-indeed.js"
       ]
     },
@@ -43,7 +43,7 @@
         "data.js",
         "button.js",
         "modal.js",
-        "ai.js",
+        "client.js",
         "content-monster.js"
       ]
     }

@@ -4,7 +4,7 @@ async function compareContent(
     resultCallback
 ) {
 
-    const response = await fetch('https://am-i-a-good-fit.vkondrav.workers.dev', {
+    const response = await fetch('https://fit.vkondrav.dev', {
         method: 'POST',
         body: JSON.stringify({
             job_description: jobDescription,
